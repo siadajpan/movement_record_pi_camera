@@ -24,4 +24,4 @@ def create_new_folder_and_file_name(extension):
     dir_path, img_name = get_datetime(extension)
     create_folder_structure(dir_path)
 
-    return img_name
+    return os.path.join(dir_path, img_name)
