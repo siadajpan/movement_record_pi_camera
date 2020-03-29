@@ -13,6 +13,7 @@ class PiCamera(Thread):
         self.image_queue = image_queue
         self.stop = False
         self.record = False
+        self.init_camera()
 
     def init_camera(self):
         self.camera = picamera.PiCamera()
