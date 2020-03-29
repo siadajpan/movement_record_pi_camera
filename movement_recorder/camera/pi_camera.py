@@ -1,13 +1,15 @@
 import queue
 import time
-from threading import Thread
+
 import picamera
 from picamera.array import PiRGBArray
+
 from movement_recorder import settings
 from movement_recorder.camera import file_utils
+from movement_recorder.camera.abstract_camera import AbstractCamera
 
 
-class PiCamera(Thread):
+class PiCamera(AbstractCamera):
     def __init__(self, image_queue: queue.Queue):
         super().__init__()
         self._camera = None
@@ -20,10 +22,7 @@ class PiCamera(Thread):
     def start_recording(self):
         self._record = True
 
-    def stop_recording(self):
-        self._record = False
-
-    def stop_camera(self):
+    def stop(self):
         self._stop = True
         if self._record:
             self._stop_recording()
