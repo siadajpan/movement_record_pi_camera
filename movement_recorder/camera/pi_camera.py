@@ -4,6 +4,7 @@ from threading import Thread
 import picamera
 from picamera.array import PiRGBArray
 from movement_recorder import settings
+from movement_recorder.camera import file_utils
 
 
 class PiCamera(Thread):
@@ -44,7 +45,9 @@ class PiCamera(Thread):
         print('stop record')
         self.camera.stop_recording()
 
-    def make_recording(self, file_name, record_time):
+    def make_recording(self, record_time):
+        file_name = file_utils.create_new_folder_and_file_name(
+            settings.Camera.RECORD_EXTENSION)
         self.start_recording(file_name)
         start_time = time.time()
 
@@ -73,5 +76,5 @@ class PiCamera(Thread):
 
             if self.record:
                 self.set_camera(recording=True)
-                self.make_recording('video.mjpeg', 5)
+                self.make_recording(5)
                 self.record = False
