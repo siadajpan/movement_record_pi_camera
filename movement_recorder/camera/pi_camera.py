@@ -58,7 +58,7 @@ class PiCamera(AbstractCamera):
 
     def _start_recording(self, file_name):
         logging.info(f'------starting recording: {file_name}-------')
-        self._camera.start_recording(file_name)
+        self._camera.start_recording(file_name, quality=100)
 
     def _stop_recording(self):
         logging.info(f'------stopping recording-------')
