@@ -1,80 +1,103 @@
+import logging
 import queue
 import time
-from threading import Thread
+
 import picamera
 from picamera.array import PiRGBArray
+
 from movement_recorder import settings
 from movement_recorder.camera import file_utils
+from movement_recorder.camera.abstract_camera import AbstractCamera
 
 
-class PiCamera(Thread):
+class PiCamera(AbstractCamera):
     def __init__(self, image_queue: queue.Queue):
         super().__init__()
-        self.camera = None
-        self.raw_capture = None
-        self.image_queue = image_queue
-        self.stop = False
-        self.record = False
-        self.init_camera()
+        self._camera = None
+        self._raw_capture = None
+        self._image_queue = image_queue
+        self._stop_loop = False
+        self._record = False
+        self._init_camera()
 
-    def init_camera(self):
-        self.camera = picamera.PiCamera()
-        self.raw_capture = PiRGBArray(self.camera)
-        self.camera.resolution = settings.Camera.MOVEMENT_RESOLUTION
-        self.camera.framerate = settings.Camera.MOVEMENT_FPS
+    def start_recording(self):
+        self._record = True
 
-    def set_fps(self, fps):
-        self.camera.framerate = fps
+    def stop_camera(self):
+        self._stop_loop = True
+        if self._record:
+            self._stop_recording()
 
-    def set_resolution(self, resolution):
-        self.camera.resolution = resolution
+    @property
+    def image_queue(self):
+        return self._image_queue
 
-    def set_camera(self, recording: bool):
+    def _init_camera(self):
+        self._camera = picamera.PiCamera()
+        self._raw_capture = PiRGBArray(self._camera)
+        self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
+        self._set_fps(settings.Camera.MOVEMENT_FPS)
+
+    def _set_fps(self, fps):
+        logging.debug(f'setting fps: {fps}')
+        self._camera.framerate = fps
+
+    def _set_resolution(self, resolution):
+        logging.debug(f'settings resolution{resolution}')
+        self._camera.resolution = resolution
+
+    def _set_camera(self, recording: bool):
         if recording:
-            self.set_fps(settings.Camera.RECORD_FPS)
-            self.set_resolution(settings.Camera.RECORD_RESOLUTION)
+            self._set_fps(settings.Camera.RECORD_FPS)
+            self._set_resolution(settings.Camera.RECORD_RESOLUTION)
         else:
-            self.set_fps(settings.Camera.MOVEMENT_FPS)
-            self.set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
+            self._set_fps(settings.Camera.MOVEMENT_FPS)
+            self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
 
-    def start_recording(self, file_name):
-        print('start record')
-        self.camera.start_recording(file_name)
+    def _start_recording(self, file_name):
+        logging.info(f'------starting recording: {file_name}-------')
+        self._camera.start_recording(file_name)
 
-    def stop_recording(self):
-        print('stop record')
-        self.camera.stop_recording()
+    def _stop_recording(self):
+        logging.info(f'------stopping recording-------')
+        self._camera.stop_recording()
 
-    def make_recording(self, record_time):
+    def _make_recording(self, record_time):
         file_name = file_utils.create_new_folder_and_file_name(
             settings.Camera.RECORD_EXTENSION)
-        self.start_recording(file_name)
+        self._start_recording(file_name)
         start_time = time.time()
 
         while time.time() - start_time < record_time:
-            if self.stop:
+            logging.debug('waiting for stop recording')
+            if self._stop_loop:
                 break
-            time.sleep(0.5)
+            time.sleep(1)
 
-        self.stop_recording()
+        self._stop_recording()
 
-    def capture(self):
-        for frame in self.camera.capture_continuous(self.raw_capture,
-                                                    format='bgr',
-                                                    use_video_port=True):
+    def _capture(self):
+        logging.info('-----starting capture------')
+        t = time.time()
+        for frame in self._camera.capture_continuous(self._raw_capture,
+                                                     format='bgr',
+                                                     use_video_port=True):
+            logging.debug(f'acquiring image time:{time.time() - t}')
             image = frame.array
-            self.raw_capture.truncate(0)
-            self.image_queue.put(image)
-
-            if self.record or self.stop:
+            self._raw_capture.truncate(0)
+            self._image_queue.put(image)
+            t = time.time()
+            if self._record or self._stop_loop:
                 return
 
     def run(self) -> None:
-        while not self.stop:
-            self.set_camera(recording=False)
-            self.capture()
+        while not self._stop_loop:
+            logging.debug('----preparing for capture------')
+            self._set_camera(recording=False)
+            self._capture()
 
-            if self.record:
-                self.set_camera(recording=True)
-                self.make_recording(5)
-                self.record = False
+            if self._record:
+                logging.debug('-----preparing for recording-------')
+                self._set_camera(recording=True)
+                self._make_recording(settings.Camera.RECORD_TIME)
+                self._record = False
