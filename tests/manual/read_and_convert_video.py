@@ -7,7 +7,7 @@ from movement_recorder.camera import file_utils
 
 
 def get_video_paths():
-    path = '/home/karol/Videos/judasz/new'
+    path = '/home/karol/Videos/judasz/new/Videos'
     path_out = '/home/karol/Videos/judasz/archive'
     file_utils.copy_folder_structure(path, path_out)
 
