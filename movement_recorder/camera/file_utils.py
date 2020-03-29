@@ -9,8 +9,7 @@ def get_datetime(extension) -> Tuple[str, str]:
     """ Makes path name from datetime """
     date = datetime.datetime.now()
     dir_path = f"{date.year}-{date.month}-{date.day}"
-    img_name = f"{date.hour}-{date.minute}-{date.second}-" \
-               f"{date.microsecond}.{extension}"
+    img_name = f"{date.hour}-{date.minute}-{date.second}.{extension}"
 
     return dir_path, img_name
 
