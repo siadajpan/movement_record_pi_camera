@@ -1,7 +1,8 @@
 import queue
 import time
 from threading import Thread
-
+import picamera
+from picamera.array import PiRGBArray
 from movement_recorder import settings
 
 
