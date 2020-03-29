@@ -4,6 +4,7 @@ class Camera:
     RECORD_FPS = 20
     RECORD_RESOLUTION = (1920, 1080)
     RECORD_EXTENSION = 'mjpeg'
+    RECORD_TIME = 5
 
 
 class PreProcessing:
