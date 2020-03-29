@@ -58,7 +58,7 @@ class PiCamera(Thread):
     def capture(self):
         for frame in self.camera.capture_continuous(self.raw_capture,
                                                     format='bgr',
-                                                    use_video_output=True):
+                                                    use_video_port=True):
             image = frame.array
             self.raw_capture.truncate(0)
             self.image_queue.put(image)
