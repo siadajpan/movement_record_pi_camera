@@ -28,4 +28,4 @@ class Controller:
                 self.process_image()
             except KeyboardInterrupt:
                 break
-        self.camera.stop()
+        self.camera.stop_camera()

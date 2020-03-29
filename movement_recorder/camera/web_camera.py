@@ -17,7 +17,7 @@ class WebCamera(AbstractCamera):
         print('starting recording')
         self._recording = True
 
-    def stop(self):
+    def stop_camera(self):
         self._stop = True
 
     @property

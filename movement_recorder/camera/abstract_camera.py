@@ -8,7 +8,7 @@ class AbstractCamera(ABC, Thread):
         pass
 
     @abstractmethod
-    def stop(self):
+    def stop_camera(self):
         pass
 
     @property
