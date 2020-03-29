@@ -73,15 +73,3 @@ class PiCamera(Thread):
                 self.set_camera(recording=True)
                 self.make_recording('video.mjpeg', 5)
                 self.record = False
-
-
-if __name__ == '__main__':
-    image_queue = queue.Queue()
-    cam = PiCamera(image_queue)
-    cam.start()
-    time.sleep(2)
-    print('starting recording')
-    cam.record = True
-    time.sleep(6)
-    print('stopping')
-    cam.stop = True
