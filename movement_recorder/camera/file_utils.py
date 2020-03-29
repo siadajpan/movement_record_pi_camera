@@ -28,3 +28,10 @@ def create_new_folder_and_file_name(extension):
     create_folder_structure(dir_path)
 
     return os.path.join(dir_path, img_name)
+
+
+def copy_folder_structure(folder_in, folder_out):
+    for folder in os.listdir(folder_in):
+        folder_path = os.path.join(folder_out, folder)
+        if not os.path.exists(folder_path):
+            os.mkdir(folder_path)
