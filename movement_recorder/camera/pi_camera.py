@@ -1,3 +1,4 @@
+import logging
 import queue
 import time
 
@@ -38,11 +39,11 @@ class PiCamera(AbstractCamera):
         self._set_fps(settings.Camera.MOVEMENT_FPS)
 
     def _set_fps(self, fps):
-        print('setting fps', fps)
+        logging.debug(f'setting fps: {fps}')
         self._camera.framerate = fps
 
     def _set_resolution(self, resolution):
-        print('settings resolution', resolution)
+        logging.debug(f'settings resolution{resolution}')
         self._camera.resolution = resolution
 
     def _set_camera(self, recording: bool):
@@ -54,35 +55,34 @@ class PiCamera(AbstractCamera):
             self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
 
     def _start_recording(self, file_name):
-        print('start record')
+        logging.info(f'------starting recording: {file_name}-------')
         self._camera.start_recording(file_name)
 
     def _stop_recording(self):
-        print('stop record')
+        logging.info(f'------stopping recording-------')
         self._camera.stop_recording()
 
     def _make_recording(self, record_time):
-        print('------starting recording-------')
         file_name = file_utils.create_new_folder_and_file_name(
             settings.Camera.RECORD_EXTENSION)
         self._start_recording(file_name)
         start_time = time.time()
 
         while time.time() - start_time < record_time:
-            print('waiting for stop recording')
+            logging.debug('waiting for stop recording')
             if self._stop_loop:
                 break
-            time.sleep(0.5)
+            time.sleep(1)
 
         self._stop_recording()
 
     def _capture(self):
-        print('-----starting capture------')
+        logging.info('-----starting capture------')
         t = time.time()
         for frame in self._camera.capture_continuous(self._raw_capture,
                                                      format='bgr',
                                                      use_video_port=True):
-            print('image', time.time() - t)
+            logging.debug(f'acquiring image time:{time.time() - t}')
             image = frame.array
             self._raw_capture.truncate(0)
             self._image_queue.put(image)
@@ -92,12 +92,12 @@ class PiCamera(AbstractCamera):
 
     def run(self) -> None:
         while not self._stop_loop:
-            print('----preparing for capture------')
+            logging.debug('----preparing for capture------')
             self._set_camera(recording=False)
             self._capture()
 
             if self._record:
-                print('-----preparing for recording-------')
+                logging.debug('-----preparing for recording-------')
                 self._set_camera(recording=True)
                 self._make_recording(settings.Camera.RECORD_TIME)
                 self._record = False
