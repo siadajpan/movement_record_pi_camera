@@ -1,3 +1,7 @@
+class Files:
+    SAVING_FOLDER = '/home/pi/Videos'
+
+
 class Camera:
     MOVEMENT_FPS = 10
     MOVEMENT_RESOLUTION = (640, 480)
