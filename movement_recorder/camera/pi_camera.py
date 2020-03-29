@@ -25,6 +25,8 @@ class PiCamera(Thread):
 
     def stop_camera(self):
         self._stop = True
+        if self._record:
+            self._stop_recording()
 
     @property
     def image_queue(self):
