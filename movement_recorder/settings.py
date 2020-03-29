@@ -3,8 +3,8 @@ class Files:
 
 
 class Camera:
-    MOVEMENT_FPS = 10
-    MOVEMENT_RESOLUTION = (640, 480)
+    MOVEMENT_FPS = 2
+    MOVEMENT_RESOLUTION = (320, 240)
     RECORD_FPS = 20
     RECORD_RESOLUTION = (1920, 1080)
     RECORD_EXTENSION = 'mjpeg'
@@ -12,7 +12,7 @@ class Camera:
 
 
 class PreProcessing:
-    HISTORY = 40
+    HISTORY = 10
     DIST_TO_THRESHOLD = 300
     DETECT_SHADOWS = False
     MOVEMENT_MEAN_THRESHOLD = 10
