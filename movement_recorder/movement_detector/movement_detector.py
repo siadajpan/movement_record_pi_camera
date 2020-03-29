@@ -24,6 +24,7 @@ class MovementDetector:
         self.history_count = 0
 
     def _check_history_count(self):
+        print(f'history count:{self.history_count}/{self.full_history_count}')
         if self.history_count <= self.full_history_count:
             self.history_count += 1
             return False
@@ -36,5 +37,5 @@ class MovementDetector:
         movement = False
         if self._check_history_count():
             movement = self._check_mean_threshold(foreground)
-
+        print(f'++++++++ movement : {movement} +++++++++')
         return movement, foreground
