@@ -35,6 +35,7 @@ class PiCamera(AbstractCamera):
     def _init_camera(self):
         self._camera = picamera.PiCamera()
         self._raw_capture = PiRGBArray(self._camera)
+        self._camera.awb_gains = (settings.Camera.RG, settings.Camera.BG)
         self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
         self._set_fps(settings.Camera.MOVEMENT_FPS)
 

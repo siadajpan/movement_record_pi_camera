@@ -3,6 +3,8 @@ class Files:
 
 
 class Camera:
+    BG = 1.3
+    RG = 1.1
     MOVEMENT_FPS = 2
     MOVEMENT_RESOLUTION = (320, 240)
     RECORD_FPS = 20
