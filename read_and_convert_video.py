@@ -47,6 +47,7 @@ if __name__ == '__main__':
 
     for video_path, video_out_path in zip(video_paths, video_out_paths):
         print('reading ', video_path)
+        name = os.path.split(video_path)[1]
         cap = cv2.VideoCapture(video_path)
         video_writer = cv2.VideoWriter(video_out_path,
                                        codec, settings.Camera.RECORD_FPS,
@@ -60,12 +61,15 @@ if __name__ == '__main__':
             frame = cv2.rotate(frame, cv2.ROTATE_180)
             frame = frame[h0: he, w0: we]
 
+            video_writer.write(frame)
+
+            cv2.putText(frame, name.split('.')[0], (10, 30), cv2.FONT_ITALIC, 1,
+                        (255, 255, 255), lineType=cv2.LINE_AA)
             cv2.imshow('f', frame)
             if stop:
                 cv2.waitKey(0)
                 stop = False
 
             cv2.waitKey(10)
-            video_writer.write(frame)
 
         video_writer.release()
