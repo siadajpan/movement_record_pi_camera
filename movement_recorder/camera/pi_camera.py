@@ -35,6 +35,8 @@ class PiCamera(AbstractCamera):
     def _init_camera(self):
         self._camera = picamera.PiCamera()
         self._raw_capture = PiRGBArray(self._camera)
+        self._camera.awb_mode = 'off'
+        self._camera.awb_gains = (settings.Camera.RG, settings.Camera.BG)
         self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
         self._set_fps(settings.Camera.MOVEMENT_FPS)
 
@@ -56,7 +58,7 @@ class PiCamera(AbstractCamera):
 
     def _start_recording(self, file_name):
         logging.info(f'------starting recording: {file_name}-------')
-        self._camera.start_recording(file_name)
+        self._camera.start_recording(file_name, quality=100)
 
     def _stop_recording(self):
         logging.info(f'------stopping recording-------')

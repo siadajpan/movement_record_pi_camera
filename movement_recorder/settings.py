@@ -3,12 +3,14 @@ class Files:
 
 
 class Camera:
+    BG = 1.3
+    RG = 1.1
     MOVEMENT_FPS = 2
     MOVEMENT_RESOLUTION = (320, 240)
     RECORD_FPS = 20
     RECORD_RESOLUTION = (1920, 1080)
     RECORD_EXTENSION = 'mjpeg'
-    RECORD_TIME = 5
+    RECORD_TIME = 10
 
 
 class PreProcessing:
