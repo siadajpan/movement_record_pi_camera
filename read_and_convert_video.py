@@ -3,13 +3,19 @@ import os
 import cv2
 
 from movement_recorder import settings
-from movement_recorder.camera import file_utils
+
+
+def copy_folder_structure(folder_in, folder_out):
+    for folder in os.listdir(folder_in):
+        folder_path = os.path.join(folder_out, folder)
+        if not os.path.exists(folder_path):
+            os.mkdir(folder_path)
 
 
 def get_video_paths():
     path = '/home/karol/Videos/judasz/new/Videos'
     path_out = '/home/karol/Videos/judasz/archive'
-    file_utils.copy_folder_structure(path, path_out)
+    copy_folder_structure(path, path_out)
 
     video_in_paths = []
     video_out_paths = []
@@ -37,6 +43,8 @@ if __name__ == '__main__':
     w, h = settings.Camera.RECORD_RESOLUTION
     h0, he, w0, we = int(0.3 * h), int(0.9 * h), int(0.3 * w), int(0.65 * w)
 
+    stop = True
+
     for video_path, video_out_path in zip(video_paths, video_out_paths):
         print('reading ', video_path)
         cap = cv2.VideoCapture(video_path)
@@ -53,7 +61,11 @@ if __name__ == '__main__':
             frame = frame[h0: he, w0: we]
 
             cv2.imshow('f', frame)
-            cv2.waitKey(20)
+            if stop:
+                cv2.waitKey(0)
+                stop = False
+
+            cv2.waitKey(10)
             video_writer.write(frame)
 
         video_writer.release()
