@@ -25,7 +25,9 @@ def get_video_paths():
         day_folder_in_path = os.path.join(path, day_folder_in)
         day_folder_out_path = os.path.join(path_out, day_folder_out)
 
-        for video_name in os.listdir(day_folder_in_path):
+        video_names = os.listdir(day_folder_in_path)
+        video_names.sort()
+        for video_name in video_names:
             video_in_paths.append(os.path.join(day_folder_in_path, video_name))
             video_out_name = video_name.replace(
                 settings.Camera.RECORD_EXTENSION,
