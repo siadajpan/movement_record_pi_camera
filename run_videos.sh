@@ -6,4 +6,4 @@ python3 /home/karol/PycharmProjects/movement_record_pi_camera/read_and_convert_v
 deactivate
 
 echo 'deleting new mjpeg videos'
-cd /home/karol/Videos/judasz/new && sudo rm -r *
+/bin/rm -r /home/karol/Videos/judasz/new/*
