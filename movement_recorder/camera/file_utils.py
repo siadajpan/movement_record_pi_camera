@@ -8,8 +8,9 @@ from movement_recorder import settings
 def get_datetime(extension) -> Tuple[str, str]:
     """ Makes path name from datetime """
     date = datetime.datetime.now()
-    dir_path = f"{date.year}-{date.month}-{date.day}"
-    img_name = f"{date.hour}-{date.minute}-{date.second}.{extension}"
+    dir_path = f"{date.year}-{date.month:02d}-{date.day:02d}"
+    img_name = f"{date.hour:02d}-{date.minute:02d}-{date.second:02d}." \
+               f"{extension}"
 
     return dir_path, img_name
 
