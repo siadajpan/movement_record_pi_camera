@@ -11,6 +11,7 @@ class Camera:
     RECORD_RESOLUTION = (1920, 1080)
     RECORD_EXTENSION = 'mjpeg'
     RECORD_TIME = 10
+    ZOOM = (0.3, 0.3, 0.6, 0.35)  # x, y, w, h
 
 
 class PreProcessing:
