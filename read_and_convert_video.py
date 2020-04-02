@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     codec = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
     w, h = settings.Camera.RECORD_RESOLUTION
-    h0, he, w0, we = int(0.3 * h), int(0.9 * h), int(0.3 * w), int(0.65 * w)
+    # h0, he, w0, we = int(0.3 * h), int(0.9 * h), int(0.3 * w), int(0.65 * w)
 
     stop = True
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         cap = cv2.VideoCapture(video_path)
         video_writer = cv2.VideoWriter(video_out_path,
                                        codec, settings.Camera.RECORD_FPS,
-                                       (we - w0, he - h0))
+                                       (w, h))
 
         while True:
             ret, frame = cap.read()
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 break
 
             frame = cv2.rotate(frame, cv2.ROTATE_180)
-            frame = frame[h0: he, w0: we]
+            # frame = frame[h0: he, w0: we]
 
             video_writer.write(frame)
 
