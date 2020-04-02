@@ -1,6 +1,7 @@
 import logging
 import queue
 import time
+from typing import Tuple
 
 import picamera
 from picamera.array import PiRGBArray
@@ -18,6 +19,7 @@ class PiCamera(AbstractCamera):
         self._image_queue = image_queue
         self._stop_loop = False
         self._record = False
+        self._zoom = settings.Camera.ZOOM
         self._init_camera()
 
     def start_recording(self):
@@ -39,6 +41,7 @@ class PiCamera(AbstractCamera):
         self._camera.awb_gains = (settings.Camera.RG, settings.Camera.BG)
         self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
         self._set_fps(settings.Camera.MOVEMENT_FPS)
+        self._set_zoom(settings.Camera.ZOOM)
 
     def _set_fps(self, fps):
         logging.debug(f'setting fps: {fps}')
@@ -47,6 +50,9 @@ class PiCamera(AbstractCamera):
     def _set_resolution(self, resolution):
         logging.debug(f'settings resolution{resolution}')
         self._camera.resolution = resolution
+
+    def _set_zoom(self, zoom: Tuple[float, float, float, float]):
+        self._camera.crop = zoom
 
     def _set_camera(self, recording: bool):
         if recording:

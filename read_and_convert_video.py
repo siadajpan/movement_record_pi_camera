@@ -20,10 +20,9 @@ def get_video_paths():
     video_in_paths = []
     video_out_paths = []
 
-    for day_folder_in, day_folder_out in zip(os.listdir(path),
-                                             os.listdir(path_out)):
-        day_folder_in_path = os.path.join(path, day_folder_in)
-        day_folder_out_path = os.path.join(path_out, day_folder_out)
+    for day_folder in os.listdir(path):
+        day_folder_in_path = os.path.join(path, day_folder)
+        day_folder_out_path = os.path.join(path_out, day_folder)
 
         video_names = os.listdir(day_folder_in_path)
         video_names.sort()
@@ -31,7 +30,7 @@ def get_video_paths():
             video_in_paths.append(os.path.join(day_folder_in_path, video_name))
             video_out_name = video_name.replace(
                 settings.Camera.RECORD_EXTENSION,
-                'avi')
+                settings.Camera.SAVE_EXTENSION)
             video_out_paths.append(
                 os.path.join(day_folder_out_path, video_out_name))
 
@@ -42,8 +41,6 @@ if __name__ == '__main__':
     video_paths, video_out_paths = get_video_paths()
 
     codec = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
-    w, h = settings.Camera.RECORD_RESOLUTION
-    h0, he, w0, we = int(0.3 * h), int(0.9 * h), int(0.3 * w), int(0.65 * w)
 
     stop = True
 
@@ -53,7 +50,7 @@ if __name__ == '__main__':
         cap = cv2.VideoCapture(video_path)
         video_writer = cv2.VideoWriter(video_out_path,
                                        codec, settings.Camera.RECORD_FPS,
-                                       (we - w0, he - h0))
+                                       settings.Camera.RECORD_RESOLUTION)
 
         while True:
             ret, frame = cap.read()
@@ -61,7 +58,7 @@ if __name__ == '__main__':
                 break
 
             frame = cv2.rotate(frame, cv2.ROTATE_180)
-            frame = frame[h0: he, w0: we]
+            # frame = frame[h0: he, w0: we]
 
             video_writer.write(frame)
 
