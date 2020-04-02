@@ -19,6 +19,7 @@ class PiCamera(AbstractCamera):
         self._image_queue = image_queue
         self._stop_loop = False
         self._record = False
+        self._zoom = settings.Camera.ZOOM
         self._init_camera()
 
     def start_recording(self):
@@ -51,7 +52,7 @@ class PiCamera(AbstractCamera):
         self._camera.resolution = resolution
 
     def _set_zoom(self, zoom: Tuple[float, float, float, float]):
-        self._camera.zoom = zoom
+        self._camera.crop = zoom
 
     def _set_camera(self, recording: bool):
         if recording:
