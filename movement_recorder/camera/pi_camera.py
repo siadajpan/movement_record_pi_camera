@@ -6,6 +6,7 @@ from typing import Tuple
 import picamera
 from picamera.array import PiRGBArray
 
+import numpy as np
 from movement_recorder import settings
 from movement_recorder.camera import file_utils
 from movement_recorder.camera.abstract_camera import AbstractCamera
@@ -39,8 +40,8 @@ class PiCamera(AbstractCamera):
         self._raw_capture = PiRGBArray(self._camera)
         self._camera.awb_mode = 'off'
         self._camera.awb_gains = (settings.Camera.RG, settings.Camera.BG)
-        self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
-        self._set_fps(settings.Camera.MOVEMENT_FPS)
+        self._set_resolution(settings.Camera.RESOLUTION)
+        self._set_fps(settings.Camera.RECORD_FPS)
         self._set_zoom(settings.Camera.ZOOM)
 
     def _set_fps(self, fps):
@@ -53,14 +54,6 @@ class PiCamera(AbstractCamera):
 
     def _set_zoom(self, zoom: Tuple[float, float, float, float]):
         self._camera.crop = zoom
-
-    def _set_camera(self, recording: bool):
-        if recording:
-            self._set_fps(settings.Camera.RECORD_FPS)
-            self._set_resolution(settings.Camera.RECORD_RESOLUTION)
-        else:
-            self._set_fps(settings.Camera.MOVEMENT_FPS)
-            self._set_resolution(settings.Camera.MOVEMENT_RESOLUTION)
 
     def _start_recording(self, file_name):
         logging.info(f'------starting recording: {file_name}-------')
@@ -91,7 +84,7 @@ class PiCamera(AbstractCamera):
                                                      format='bgr',
                                                      use_video_port=True):
             logging.debug(f'acquiring image time:{time.time() - t}')
-            image = frame.array
+            image = np.resize(frame.array, settings.Camera.MOVEMENT_RESOLUTION)
             self._raw_capture.truncate(0)
             self._image_queue.put(image)
             t = time.time()
@@ -101,11 +94,9 @@ class PiCamera(AbstractCamera):
     def run(self) -> None:
         while not self._stop_loop:
             logging.debug('----preparing for capture------')
-            self._set_camera(recording=False)
             self._capture()
 
             if self._record:
                 logging.debug('-----preparing for recording-------')
-                self._set_camera(recording=True)
                 self._make_recording(settings.Camera.RECORD_TIME)
                 self._record = False
