@@ -18,7 +18,7 @@ class Camera:
     MOVEMENT_RESOLUTION = calculate_resolution(MOVEMENT_RESOLUTION_ORIGINAL,
                                                ZOOM)
     RECORD_FPS = 20
-    RESOLUTION_ORIGINAL = (3280, 2464)
+    RESOLUTION_ORIGINAL = (1920, 1080)
     RESOLUTION = calculate_resolution(RESOLUTION_ORIGINAL,
                                       ZOOM)
 
