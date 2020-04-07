@@ -22,6 +22,12 @@ class MovementDetector:
 
         return mean_above_threshold
 
+    def _check_brightness_threshold(self, image):
+        brightness_above_threshold = \
+            np.mean(image) > settings.PreProcessing.BRIGHTNESS_THRESHOLD
+
+        return brightness_above_threshold
+
     def reset_history_count(self):
         self.history_count = 0
 
@@ -39,7 +45,9 @@ class MovementDetector:
 
         movement = False
         if self._check_history_count():
-            movement = self._check_mean_threshold(foreground)
+            picture_changed = self._check_mean_threshold(foreground)
+            not_dark = self._check_brightness_threshold(image)
+            movement = picture_changed and not_dark
             logging.debug(f'++++++++ movement : {movement} +++++++++')
 
         return movement, foreground
