@@ -40,6 +40,7 @@ class PiCamera(AbstractCamera):
         self._raw_capture = PiRGBArray(self._camera)
         self._camera.awb_mode = 'off'
         self._camera.awb_gains = (settings.Camera.RG, settings.Camera.BG)
+        self._camera.brightness = settings.Camera.BRIGHTNESS
         self._set_resolution(settings.Camera.RESOLUTION)
         self._set_fps(settings.Camera.RECORD_FPS)
         self._set_zoom(settings.Camera.ZOOM)
