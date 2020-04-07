@@ -50,7 +50,7 @@ if __name__ == '__main__':
         cap = cv2.VideoCapture(video_path)
         video_writer = cv2.VideoWriter(video_out_path,
                                        codec, settings.Camera.RECORD_FPS,
-                                       settings.Camera.RECORD_RESOLUTION)
+                                       settings.Camera.RESOLUTION)
 
         while True:
             ret, frame = cap.read()
@@ -58,8 +58,6 @@ if __name__ == '__main__':
                 break
 
             frame = cv2.rotate(frame, cv2.ROTATE_180)
-            # frame = frame[h0: he, w0: we]
-
             video_writer.write(frame)
 
             cv2.putText(frame, name.split('.')[0], (10, 30), cv2.FONT_ITALIC, 1,
@@ -69,6 +67,6 @@ if __name__ == '__main__':
                 cv2.waitKey(0)
                 stop = False
 
-            cv2.waitKey(10)
+            cv2.waitKey(15)
 
         video_writer.release()
