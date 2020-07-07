@@ -19,6 +19,10 @@ def create_folder_structure(folder_path):
     if os.path.exists(folder_path):
         return
 
+    parent_path = os.path.split(folder_path)[0]
+    if not os.path.exists(parent_path):
+        create_folder_structure(parent_path)
+
     os.mkdir(folder_path)
 
 
